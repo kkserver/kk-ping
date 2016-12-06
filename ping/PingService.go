@@ -6,6 +6,7 @@ import (
 	"github.com/kkserver/kk-lib/kk/app/remote"
 	"github.com/kkserver/kk-lib/kk/json"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -127,7 +128,8 @@ func (S *PingService) HandlePingQueryTask(a app.IApp, task *PingQueryTask) error
 
 		for _, ping := range S.pings {
 
-			if (task.Name == "" || ping.Name == task.Name) && (task.Address == "" || ping.Address == task.Address) {
+			if (task.Name == "" || ping.Name == task.Name) && (task.Address == "" || ping.Address == task.Address) &&
+				(task.Prefix == "" || strings.HasPrefix(ping.Name, task.Prefix)) {
 				pings = append(pings, ping)
 			}
 

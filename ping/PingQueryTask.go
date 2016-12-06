@@ -13,6 +13,7 @@ type PingQueryTask struct {
 	app.Task
 	Name    string `json:"name,omitempty"`
 	Address string `json:"address,omitempty"`
+	Prefix  string `json:"prefix,omitempty"`
 	Result  PingQueryTaskResult
 }
 
