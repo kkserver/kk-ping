@@ -6,7 +6,7 @@ import (
 
 type PingQueryTaskResult struct {
 	app.Result
-	Pings []Ping `json:"pings,omitempty"`
+	Pings []*Ping `json:"pings,omitempty"`
 }
 
 type PingQueryTask struct {

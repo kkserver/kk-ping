@@ -18,7 +18,7 @@ type PingService struct {
 	Cleanup        *PingCleanupTask
 
 	dispatch *kk.Dispatch
-	pings    map[int64]Ping
+	pings    map[int64]*Ping
 	id       int64
 }
 
@@ -29,7 +29,7 @@ func (S *PingService) Handle(a app.IApp, task app.ITask) error {
 func (S *PingService) HandleInitTask(a app.IApp, task *app.InitTask) error {
 
 	S.dispatch = kk.NewDispatch()
-	S.pings = map[int64]Ping{}
+	S.pings = map[int64]*Ping{}
 	S.id = 0
 
 	return nil
@@ -69,7 +69,7 @@ func (S *PingService) HandleRemoteReceiveMessageTask(a app.IApp, task *remote.Re
 
 				}
 
-				S.pings[S.id] = v
+				S.pings[S.id] = &v
 
 				S.id = S.id + 1
 
@@ -124,7 +124,7 @@ func (S *PingService) HandlePingQueryTask(a app.IApp, task *PingQueryTask) error
 
 	S.dispatch.Sync(func() {
 
-		var pings = []Ping{}
+		var pings = []*Ping{}
 
 		for _, ping := range S.pings {
 
