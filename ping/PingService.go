@@ -12,10 +12,11 @@ import (
 
 type PingService struct {
 	app.Service
-	Init           *app.InitTask
+
 	ReceiveMessage *remote.RemoteReceiveMessageTask
 	Query          *PingQueryTask
-	Cleanup        *PingCleanupTask
+
+	Expires int64
 
 	dispatch *kk.Dispatch
 	pings    map[int64]*Ping
@@ -31,6 +32,32 @@ func (S *PingService) HandleInitTask(a app.IApp, task *app.InitTask) error {
 	S.dispatch = kk.NewDispatch()
 	S.pings = map[int64]*Ping{}
 	S.id = 0
+
+	var fn func() = nil
+
+	fn = func() {
+
+		var ids = []int64{}
+		var now = time.Now().Unix()
+
+		for id, ping := range S.pings {
+
+			if ping.Status == PingStatusOffline || ping.Atime+S.Expires < now {
+				ids = append(ids, id)
+			}
+
+		}
+
+		for _, id := range ids {
+			delete(S.pings, id)
+		}
+
+		log.Println("PingService", "Cleanup", ids)
+
+		S.dispatch.AsyncDelay(fn, time.Duration(S.Expires)*time.Second)
+	}
+
+	S.dispatch.AsyncDelay(fn, time.Duration(S.Expires)*time.Second)
 
 	return nil
 }
@@ -63,6 +90,9 @@ func (S *PingService) HandleRemoteReceiveMessageTask(a app.IApp, task *remote.Re
 						}
 						if v.Counter != nil {
 							ping.Counter = v.Counter
+						}
+						if v.Tasks != nil {
+							ping.Tasks = v.Tasks
 						}
 						return
 					}
@@ -136,32 +166,6 @@ func (S *PingService) HandlePingQueryTask(a app.IApp, task *PingQueryTask) error
 		}
 
 		task.Result.Pings = pings
-
-	})
-
-	return nil
-}
-
-func (S *PingService) HandlePingCleanupTask(a app.IApp, task *PingCleanupTask) error {
-
-	S.dispatch.Sync(func() {
-
-		var ids = []int64{}
-		var now = time.Now().Unix()
-
-		for id, ping := range S.pings {
-
-			if ping.Status == PingStatusOffline || ping.Atime+task.Expires < now {
-				ids = append(ids, id)
-			}
-
-		}
-
-		for _, id := range ids {
-			delete(S.pings, id)
-		}
-
-		log.Println("[PingService][HandlePingCleanupTask] ", ids)
 
 	})
 
