@@ -54,10 +54,10 @@ func (S *PingService) HandleInitTask(a app.IApp, task *app.InitTask) error {
 
 		log.Println("PingService", "Cleanup", ids)
 
-		S.dispatch.AsyncDelay(fn, time.Duration(S.Expires)*time.Second)
+		S.dispatch.AsyncDelay(fn, 30*time.Second)
 	}
 
-	S.dispatch.AsyncDelay(fn, time.Duration(S.Expires)*time.Second)
+	S.dispatch.Async(fn)
 
 	return nil
 }
