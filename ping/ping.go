@@ -9,13 +9,13 @@ const PingStatusOnline = 200
 const PingStatusOffline = 300
 
 type Ping struct {
-	Name    string                     `json:"name,omitempty"`
-	Options map[string]interface{}     `json:"options,omitempty"`
-	Address string                     `json:"address,omitempty"`
-	Counter *remote.Counter            `json:"counter,omitempty"`
-	Tasks   map[string]*remote.Counter `json:"tasks,omitempty"`
-	Status  int                        `json:"status,omitempty"`
-	Atime   int64                      `json:"atime,omitempty"`
+	Name    string                 `json:"name,omitempty"`
+	Options map[string]interface{} `json:"options,omitempty"`
+	Address string                 `json:"address,omitempty"`
+	Counter *remote.Counter        `json:"counter,omitempty"`
+	Tasks   map[string]interface{} `json:"tasks,omitempty"`
+	Status  int                    `json:"status,omitempty"`
+	Atime   int64                  `json:"atime,omitempty"`
 }
 
 type PingApp struct {

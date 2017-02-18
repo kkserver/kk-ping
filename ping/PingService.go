@@ -134,6 +134,9 @@ func (S *PingService) HandleRemoteReceiveMessageTask(a app.IApp, task *remote.Re
 						if v.Counter != nil {
 							ping.Counter = v.Counter
 						}
+						if v.Tasks != nil {
+							ping.Tasks = v.Tasks
+						}
 						return
 					}
 
