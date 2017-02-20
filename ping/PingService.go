@@ -99,6 +99,10 @@ func (S *PingService) HandleRemoteReceiveMessageTask(a app.IApp, task *remote.Re
 
 				}
 
+				if v.Ctime == 0 {
+					v.Ctime = v.Atime
+				}
+
 				S.pings[S.id] = &v
 
 				S.id = S.id + 1

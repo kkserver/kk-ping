@@ -16,6 +16,7 @@ type Ping struct {
 	Tasks   map[string]interface{} `json:"tasks,omitempty"`
 	Status  int                    `json:"status,omitempty"`
 	Atime   int64                  `json:"atime,omitempty"`
+	Ctime   int64                  `json:"ctime,omitempty"`
 }
 
 type PingApp struct {
